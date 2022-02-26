@@ -2,7 +2,7 @@
 Csatlakozz te is a FiveM Land discordjához, hogy további finomságokat találj! 
 Discord: https://discord.gg/Zdaqj5EM5Z
 
-#### Funkciók és leírás
+#### Funkciók & leírás
 - Open source
 - Menü gomb: **INSERT**
 - Mozgatható UI
