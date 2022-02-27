@@ -10,7 +10,7 @@ version      '1.0.0'
 description  'Simple Adminpanel'
 license      'GPL-3.0-or-later'
 author       'FiveM Land (Adam)'
-repository   ''
+repository   'https://github.com/sadam376/adam_adminpanel'
 
 --[[ Manifest ]]--
 dependencies {
