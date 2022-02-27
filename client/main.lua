@@ -4,7 +4,7 @@ local speed = false
 local god = false
 local superjump = false
 local invisible = false
-local onduty = {}
+
 
 ADMIN_LEVELS = {
     ['admin'] = true,
@@ -129,42 +129,6 @@ RegisterNUICallback(
                 color = invisible and 'success' or 'danger'
             }
         )
-    end
-)
-
-RegisterNUICallback(
-    'duty',
-    function()
-        if onduty[PlayerId()] then
-            onduty[PlayerId()] = false
-            SendNUIMessage(
-                {
-                    action = 'alert',
-                    msg = 'Kiléptél az Admin szolgálatból',
-                    title = 'Adminszolgálat',
-                    color = 'danger'
-                }
-            )
-            PlayerId().state:set(duty, false, false)
-        else
-            onduty[PlayerId()] = true
-            SendNUIMessage(
-                {
-                    action = 'alert',
-                    msg = 'Beléptél az Admin szolgálatba',
-                    title = 'Adminszolgálat',
-                    color = 'success'
-                }
-            )
-            PlayerId().state:set(duty, true, false)
-        end
-    end
-)
-
-RegisterCommand(
-    'duty',
-    function(source, args, rawCommand)
-        print(onduty[PlayerId()])
     end
 )
 
