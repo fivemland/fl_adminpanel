@@ -27,32 +27,31 @@ window.addEventListener('message', (event) => {
 })
 
 function godmode() {
-    fetch('https://adam_adminpanel/godmode')
+    fetch(`https://${GetParentResourceName()}/godmode`)
 }
 
 function speedrun() {
-    fetch('https://adam_adminpanel/speedrun')
+    fetch(`https://${GetParentResourceName()}/speedrun`)
 }
 
 function superjump() {
-    fetch('https://adam_adminpanel/superjump')
+    fetch(`https://${GetParentResourceName()}/superjump`)
 }
 
 function invisible() {
-    fetch('https://adam_adminpanel/invisible')
+    fetch(`https://${GetParentResourceName()}/invisible`)
 }
 
 function logKey(e) {
     if (e.key == 'Escape') {
         
-        fetch('https://adam_adminpanel/close')
+        fetch(`https://${GetParentResourceName()}/close`)
 
     }
 }
 
 function closePanel() {
-    console.log("test")
-    fetch('https://adam_adminpanel/close');
+    fetch(`https://${GetParentResourceName()}/close`);
 }
 
 document.addEventListener('keydown', logKey);
@@ -73,7 +72,7 @@ function toastAnotherAlert(msg, title, color) {
 }
 
 async function savecoords() {
-    const response = await fetch('https://adam_adminpanel/copycoords')
+    const response = await fetch(`https://${GetParentResourceName()}/copycoords`)
 
     const {position} = await response.json()
 
