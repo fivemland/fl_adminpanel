@@ -1,107 +1,125 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="utf-8" />
   <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
   <meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" name="viewport" />
   <meta name="viewport" content="width=device-width" />
-  <title>Adam Adminpanel</title>
+  <!-- LINKS -->
   <script src="https://kit.fontawesome.com/07fd05aa3d.js" crossorigin="anonymous"></script>
+
+  <!-- CSS FILE -->
+  <link rel="stylesheet" href="style.css">
   <!-- Halfmoon CSS -->
   <link href="https://cdn.jsdelivr.net/npm/halfmoon@1.1.1/css/halfmoon-variables.min.css" rel="stylesheet" />
-    <link
-      rel="stylesheet"
-      href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css"
-    />
-
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css" />
   
+  <title>Adam Adminpanel</title>
 </head>
+
 <body>
+  <!-- MAIN -->
+  <input type="text" class="clipboard" />
+  
+  <div class="sticky-alerts"></div>
+  
+  <div class="modal bg-transparent" id="modal" tabindex="-1" role="dialog">
+    <div class="modal-dialog " role="document">
+      
+      <div class="modal-content bg-dark text-white">
+        <div class="position-relative">
+          <a href="#" class="float-right text-danger py-5" role="button"><i class="fas fa-times-circle"></i></a>
+          <h4 class="float-left">Admin parancsok</h4>
+        </div>
+        <div id="commands">
+        
+        </div>
+        
+      </div>
+    </div>
+  </div>
+  
+  <!-- MAIN END -->
+  
+  <!-- CONTENT -->
+  
+  <div class="content text-white bg-dark ui-widget-content" id="draggable">
 
-<!-- CONTENT -->
-
-<input type="text" class="clipboard">
-
-
-<div class="sticky-alerts"></div>
-<div  class="content text-white bg-dark ui-widget-content "  id="draggable">
-    <a class="float-right text-danger" href="#" onclick="closePanel()"><i class="fas fa-times-circle" ></i></a>
-    <a class="float-left text-danger" href="#" onclick="closePanel()">Admin Panel</a>
-    <nav class="navbar bg-dark text-white d-flex justify-content-between align-items-center">
-        <div class="text-success"><i class="fas fa-signal"></i> Online: <span id="players"></span>/64</div>
-        <div class="text-center text-primary"><i class="fas fa-clock"></i> Idő: <span id="time"></span></div>
-        <div class="text-danger"><span id="group"></span> <i class="fas fa-user-shield"></i></div>
+    <!-- NAVBAR -->
+    <nav class="navbar bg-dark text-white d-flex justify-content-between align-items-center h-25 ">
+      <!-- NAVBAR CONTENT -->
+          <!-- ONLINE PLAYERS -->
+      <div class="text-success py-5">
+        <i class="fas fa-signal"></i> Elérhető: <span id="players">0</span>/64
+      </div>
+          <!-- PLAYTIME -->
+      <div class="text-center text-primary py-5">
+        <i class="fas fa-clock"></i> Játékidő: <span id="playTime"> 0 m</span>
+      </div>
+          <!-- GROUP -->
+      <div class="text-danger py-5">
+        <i class="fas fa-user-shield"></i> <span id="group"> Admin</span></i>
+      </div>
+          <!-- CLOSE -->
+      <a class="float-right text-danger py-5" href="#" onclick="closePanel()"><i class="fas fa-times-circle"></i></a>
     </nav>
-    <div class="switches d-flex justify-content-center align-items-center text-white mb-5">
-        <div class="custom-switch my-5 mx-5">
-            <input type="checkbox" id="switch-1" onclick="superjump()">
-            <label for="switch-1">Superjump</label>
-        </div>
-        <div class="custom-switch my-5 mx-5">
-            <input type="checkbox" id="switch-2" onclick="godmode()">
-            <label for="switch-2">Godmode</label>
-        </div>
-        <div class="custom-switch my-5 mx-5">
-            <input type="checkbox" id="switch-3" onclick="speedrun()">
-            <label for="switch-3">Speedrun</label>
-        </div>
-        <div class="custom-switch my-5 mx-5">
-            <input type="checkbox" id="switch-4" onclick="invisible()">
-            <label for="switch-4">Invisible</label>
-        </div>
+    <!-- NAVBAR END -->
+
+    <!-- SWITCHES -->
+    <div class="switches d-flex bg-dark justify-content-center align-items-center text-white mb-5">
+      <!-- SuperJump -->
+      <div class="custom-switch my-5 mx-5">
+        <input type="checkbox" id="switch-1" onclick="SuperJump()" />
+        <label for="switch-1">SuperJump</label>
+      </div>
+      <!-- Godmode -->
+      <div class="custom-switch my-5 mx-5">
+        <input type="checkbox" id="switch-2" onclick="Godmode()" />
+        <label for="switch-2">Godmode</label>
+      </div>
+      <!-- SPEED -->
+      <div class="custom-switch my-5 mx-5">
+        <input type="checkbox" id="switch-3" onclick="Speedrun()" />
+        <label for="switch-3">Speedrun</label>
+      </div>
+      <!-- INVISIBLE -->
+      <div class="custom-switch my-5 mx-5">
+        <input type="checkbox" id="switch-4" onclick="Invisible()" />
+        <label for="switch-4">Invisible</label>
+      </div>
     </div>
-    
-    <div class="info d-block " >
-        <button class="btn btn-primary w-full" type="button" onclick="savecoords()"><i class="fas fa-clone"></i> Koordináta másolása</button>
+    <!-- SWITCHES END -->
 
+    <!-- BUTTONS -->
+    <div class="info d-flex">
+      <!-- COPY COORDINATES BUTTON -->
+      <div class="w-half ">
+        <button class="btn btn-primary w-full" type="button" onclick="CopyCoords()">
+          <i class="fas fa-clone"></i> Koordináta másolása
+        </button>
+      </div>
+      <!-- VIEW COMMANDS BUTTON -->
+      <div class=" w-half pl-5">
+        <a href="#modal" class="btn btn-primary w-full" role="button">
+          <i class="fas fa-terminal"></i> Parancsok
+        </a>
+      </div>
     </div>
-
-</div>
-
-
-
-
+      <!-- DUTY BUTTON -->
+    <button id="dbutton" class="btn btn-success w-full text-white mx-7 my-5" type="button" onclick="Duty()">
+      <i class="fas fa-user-shield"></i><span id="dtext"> Belépés a szolgálatba</span>
+    </button>
+  </div>
+  <!-- BUTTONS END -->
 <!-- CONTENT END -->
 
-<script src="https://code.jquery.com/jquery-3.6.0.js"></script>
-<script src="https://code.jquery.com/ui/1.13.1/jquery-ui.js"></script>
-<script src="ui.js"></script>
-<!-- Halfmoon JS -->
-<script src="https://cdn.jsdelivr.net/npm/halfmoon@1.1.1/js/halfmoon.min.js"></script>
-<style>
-    * {
-        user-select: none;
-    }
+  <script src="https://code.jquery.com/jquery-3.6.0.js"></script>
+  <script src="https://code.jquery.com/ui/1.13.1/jquery-ui.js"></script>
+  <script src="ui.js"></script>
 
-    body {
-        background: transparent !important;    
-        overflow: hidden;
-    }
-    .content {
-        animation: bounceIn; /* referring directly to the animation's @keyframe declaration */
-        animation-duration: 0.5s; /* don't forget to set a duration! */
-        display: none;
-        margin-top: 15px;
-        padding: 0.7vh 0.7vh 0.7vh 0.7vh;
-        width: fit-content;
-        margin-left: auto;
-        margin-right: auto;
-        border-radius: 10px;
-    }
-
-    nav {
-        border-bottom: 1px solid rgba(236, 236, 236, 0.192) !important;
-    }
-    
-    .switches {
-        border-bottom: 1px solid rgba(236, 236, 236, 0.192) !important;
-
-    }
-
-    .clipboard {
-        opacity: 0;
-    }
-
-</style>
+  <!-- Halfmoon JS -->
+  <script src="https://cdn.jsdelivr.net/npm/halfmoon@1.1.1/js/halfmoon.min.js"></script>
 </body>
+
 </html>
