@@ -1,15 +1,10 @@
 local nuiFocus = false
 local showedUI = false
-local speed = false
+local speedrun = false
 local god = false
 local superjump = false
 local invisible = false
-
-
-ADMIN_LEVELS = {
-    ['admin'] = true,
-    ['superadmin'] = true
-}
+local onduty = {}
 
 -- Panel open
 RegisterCommand(
@@ -18,7 +13,7 @@ RegisterCommand(
         ESX.TriggerServerCallback(
             'PlayerGroup',
             function(group)
-                if ADMIN_LEVELS[group] then
+                if AAP.AdminGroups[group] then
                     showedUI = not showedUI
 
                     if showedUI then
@@ -36,14 +31,16 @@ RegisterKeyMapping('adminpanel', 'Admin Panel', 'keyboard', 'INSERT')
 
 -- Functions
 
+
 function showUI(group)
-    SendNUIMessage(
-        {
-            playerCount = #GetActivePlayers(),
-            group = group,
-            action = 'showUI'
-        }
-    )
+        SendNUIMessage(
+            {
+                AdminCommands = AAP.AdminCommands,
+                playerCount = #GetActivePlayers(),
+                group = group,
+                action = 'showUI'
+            }
+        )
     SetNuiFocus(true, true)
 end
 
@@ -62,30 +59,29 @@ end
 RegisterNUICallback('close', hideUI)
 
 RegisterNUICallback(
-    'speedrun',
+    'Speedrun',
     function()
-        speed = not speed
+        speedrun = not speedrun
         SendNUIMessage(
             {
                 action = 'alert',
-                msg = speed and 'bekapcsolva' or 'kikapcsolva',
-                title = 'Speedrun',
-                color = speed and 'success' or 'danger'
+                msg = speedrun and 'Speedrun: bekapcsolva' or 'Speedrun: kikapcsolva',
+                color = speedrun and 'success' or 'danger'
             }
         )
-        SetRunSprintMultiplierForPlayer(PlayerId(), speed and 1.49 or 1.0)
+        SetRunSprintMultiplierForPlayer(PlayerId(), speedrun and 1.49 or 1.0)
     end
 )
 
 RegisterNUICallback(
-    'godmode',
+    'Godmode',
     function()
         god = not god
         SendNUIMessage(
             {
                 action = 'alert',
-                msg = god and 'bekapcsolva' or 'kikapcsolva',
-                title = 'Godmode',
+                msg = god and 'Godmode: bekapcsolva' or 'Godmode: kikapcsolva',
+                -- title = 'Godmode',
                 color = god and 'success' or 'danger'
             }
         )
@@ -94,7 +90,7 @@ RegisterNUICallback(
 )
 
 RegisterNUICallback(
-    'superjump',
+    'SuperJump',
     function()
         CreateThread(
             function()
@@ -102,8 +98,7 @@ RegisterNUICallback(
                 SendNUIMessage(
                     {
                         action = 'alert',
-                        msg = superjump and 'bekapcsolva' or 'kikapcsolva',
-                        title = 'Superjump',
+                        msg = superjump and 'SuperJump: bekapcsolva' or 'SuperJump: kikapcsolva',
                         color = superjump and 'success' or 'danger'
                     }
                 )
@@ -117,15 +112,14 @@ RegisterNUICallback(
 )
 
 RegisterNUICallback(
-    'invisible',
+    'Invisible',
     function()
         invisible = not invisible
         SetEntityVisible(PlayerPedId(), not invisible)
         SendNUIMessage(
             {
                 action = 'alert',
-                msg = invisible and 'bekapcsolva' or 'kikapcsolva',
-                title = 'Láthatatlanság',
+                msg = invisible and 'Invisible: bekapcsolva' or 'Invisible: kikapcsolva',
                 color = invisible and 'success' or 'danger'
             }
         )
@@ -133,7 +127,38 @@ RegisterNUICallback(
 )
 
 RegisterNUICallback(
-    'copycoords',
+    'Duty',
+    function()
+        if onduty[GetPlayerServerId(PlayerId())] then
+            onduty[GetPlayerServerId(PlayerId())] = false
+            SendNUIMessage(
+                {
+                    action = 'alert',
+                    msg = 'Kiléptél az Admin szolgálatból',
+                    title = 'Adminszolgálat',
+                    color = 'danger'
+                }
+            )
+            TriggerServerEvent("adam_adminpanel:SendToDiscord", 1752220, "Adminduty", GetPlayerName(PlayerId()).." kilépett a szolgálatból", AAP.DiscordWebhook)
+        else
+            onduty[GetPlayerServerId(PlayerId())] = true
+            SendNUIMessage(
+                {
+                    action = 'alert',
+                    msg = 'Beléptél az Admin szolgálatba',
+                    title = 'Adminszolgálat',
+                    color = 'success'
+                }
+            )
+            TriggerServerEvent("adam_adminpanel:SendToDiscord", 1752220, "Adminduty", GetPlayerName(PlayerId()).." belépett a szolgálatba", AAP.DiscordWebhook)
+        end
+        TriggerServerEvent("setAdminsOnDuty", onduty)
+    end
+)
+
+
+RegisterNUICallback(
+    'CopyCoords',
     function(data, cb)
         local playerPed = PlayerPedId()
         local posX, posY, posZ = table.unpack(GetEntityCoords(playerPed))
@@ -141,3 +166,4 @@ RegisterNUICallback(
         cb({position = posX .. ', ' .. posY .. ', ' .. posZ})
     end
 )
+
