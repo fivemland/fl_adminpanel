@@ -1,3 +1,18 @@
+const joinTime = Date.now();
+const playTimeElement = document.getElementById("playTime");
+
+setInterval(() => {
+  const timeDiff = new Date(Date.now() - joinTime);
+
+  const hours = timeDiff.getHours() - 1;
+  const minutes = timeDiff.getMinutes();
+  const seconds = timeDiff.getSeconds();
+
+  playTimeElement.innerText = `${hours < 10 ? "0" + hours : hours}:${
+    minutes < 10 ? "0" + minutes : minutes
+  }:${seconds < 10 ? "0" + seconds : seconds}`;
+}, 1000);
+
 window.addEventListener("message", (event) => {
   let data = event.data;
 
@@ -22,27 +37,67 @@ window.addEventListener("message", (event) => {
   if (data.playerCount != undefined) {
     document.getElementById("players").innerHTML = data.playerCount;
   }
+
+  let AdminCommands = data.AdminCommands;
+  if (AdminCommands) {
+    document.getElementById("commands").innerHTML = "";
+
+    var newTable = "<table  width='100%' >";
+    for (let i = 0; i < AdminCommands.length; i++) {
+      newTable +=
+        "<tr><th>" +
+        AdminCommands[i].name +
+        "</th><th>" +
+        AdminCommands[i].description +
+        "</th></tr>";
+    }
+    newTable += "</table>";
+
+    document.getElementById("commands").innerHTML = newTable;
+  }
 });
 
-function godmode() {
-  fetch(`https://${GetParentResourceName()}/godmode`);
+function Godmode() {
+  fetch(`https://${GetParentResourceName()}/Godmode`);
 }
 
-function speedrun() {
-  fetch(`https://${GetParentResourceName()}/speedrun`);
+function Speedrun() {
+  fetch(`https://${GetParentResourceName()}/Speedrun`);
 }
 
-function superjump() {
-  fetch(`https://${GetParentResourceName()}/superjump`);
+function SuperJump() {
+  fetch(`https://${GetParentResourceName()}/SuperJump`);
 }
 
-function invisible() {
-  fetch(`https://${GetParentResourceName()}/invisible`);
+function Invisible() {
+  fetch(`https://${GetParentResourceName()}/Invisible`);
 }
 
 function logKey(e) {
   if (e.key == "Escape") {
     fetch(`https://${GetParentResourceName()}/close`);
+  }
+}
+
+let onduty = false;
+function Duty() {
+  const dbutton = document.getElementById("dbutton");
+  const dtext = document.getElementById("dtext");
+
+  if (onduty) {
+    onduty = false;
+    fetch(`https://${GetParentResourceName()}/Duty`);
+    dbutton.classList.remove("btn-success");
+    dbutton.classList.remove("btn-danger");
+    dbutton.classList.add("btn-success");
+    dtext.innerHTML = " Belépés a szolgálatba";
+  } else {
+    onduty = true;
+    fetch(`https://${GetParentResourceName()}/Duty`);
+    dbutton.classList.remove("btn-success");
+    dbutton.classList.remove("btn-danger");
+    dbutton.classList.add("btn-danger");
+    dtext.innerHTML = " Kilépés a szolgálatból";
   }
 }
 
@@ -62,13 +117,13 @@ function toastAnotherAlert(msg, title, color) {
     title: title,
     alertType: "alert-" + color,
     fillType: "filled",
-    hasDismissButton: false,
+    hasDismissButton: true,
     timeShown: msg.length * 250,
   });
 }
 
-async function savecoords() {
-  const response = await fetch(`https://${GetParentResourceName()}/copycoords`);
+async function CopyCoords() {
+  const response = await fetch(`https://${GetParentResourceName()}/CopyCoords`);
 
   const { position } = await response.json();
 
@@ -81,11 +136,3 @@ async function savecoords() {
   inputElement.value = "";
   toastAnotherAlert("Vágólapra másolva!", "Koordináta", "primary");
 }
-
-setInterval(() => {
-  const date = new Date();
-  document.getElementById("time").innerHTML =
-    ("0" + date.getHours()).slice(-2) +
-    ":" +
-    ("0" + date.getMinutes()).slice(-2);
-}, 1000);
