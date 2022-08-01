@@ -6,24 +6,39 @@ local superjump = false
 local invisible = false
 local onduty = {}
 
+function checkAdmin()
+    local p = promise.new()
+
+    ESX.TriggerServerCallback('PlayerGroup', function(group)
+        p:resolve(AAP.AdminGroups[group])
+    end)
+
+    return Citizen.Await(p)
+end
+
+RegisterAdminNUICallback = function(name, cb)
+    RegisterNUICallback(name, function(...)
+        if not checkAdmin() then 
+            return
+        end
+        cb(...)
+    end)
+end
+
 -- Panel open
 RegisterCommand(
     'adminpanel',
     function()
-        ESX.TriggerServerCallback(
-            'PlayerGroup',
-            function(group)
-                if AAP.AdminGroups[group] then
-                    showedUI = not showedUI
+        if not checkAdmin() then 
+            return
+        end
+        showedUI = not showedUI
 
-                    if showedUI then
-                        showUI(group)
-                    else
-                        hideUI()
-                    end
-                end
-            end
-        )
+        if showedUI then
+            showUI(group)
+        else
+            hideUI()
+        end
     end
 )
 
@@ -58,7 +73,7 @@ end
 
 RegisterNUICallback('close', hideUI)
 
-RegisterNUICallback(
+RegisterAdminNUICallback(
     'Speedrun',
     function()
         speedrun = not speedrun
@@ -73,7 +88,7 @@ RegisterNUICallback(
     end
 )
 
-RegisterNUICallback(
+RegisterAdminNUICallback(
     'Godmode',
     function()
         god = not god
@@ -89,7 +104,7 @@ RegisterNUICallback(
     end
 )
 
-RegisterNUICallback(
+RegisterAdminNUICallback(
     'SuperJump',
     function()
         CreateThread(
@@ -111,7 +126,7 @@ RegisterNUICallback(
     end
 )
 
-RegisterNUICallback(
+RegisterAdminNUICallback(
     'Invisible',
     function()
         invisible = not invisible
@@ -126,7 +141,7 @@ RegisterNUICallback(
     end
 )
 
-RegisterNUICallback(
+RegisterAdminNUICallback(
     'Duty',
     function()
         if onduty[GetPlayerServerId(PlayerId())] then
@@ -157,7 +172,7 @@ RegisterNUICallback(
 )
 
 
-RegisterNUICallback(
+RegisterAdminNUICallback(
     'CopyCoords',
     function(data, cb)
         local playerPed = PlayerPedId()
