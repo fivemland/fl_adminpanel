@@ -18,9 +18,10 @@ end
 
 RegisterAdminNUICallback = function(name, cb)
     RegisterNUICallback(name, function(...)
-        if not checkAdmin() then 
+        if not showedUI then 
             return
         end
+
         cb(...)
     end)
 end
@@ -41,12 +42,9 @@ RegisterCommand(
         end
     end
 )
-
 RegisterKeyMapping('adminpanel', 'Admin Panel', 'keyboard', 'INSERT')
 
 -- Functions
-
-
 function showUI(group)
         SendNUIMessage(
             {
