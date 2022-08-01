@@ -51,7 +51,8 @@ function showUI(group)
                 AdminCommands = AAP.AdminCommands,
                 playerCount = #GetActivePlayers(),
                 group = group,
-                action = 'showUI'
+                action = 'showUI',
+                inDuty = isPlayerInAdminduty()
             }
         )
     SetNuiFocus(true, true)
@@ -94,7 +95,6 @@ RegisterAdminNUICallback(
             {
                 action = 'alert',
                 msg = god and 'Godmode: bekapcsolva' or 'Godmode: kikapcsolva',
-                -- title = 'Godmode',
                 color = god and 'success' or 'danger'
             }
         )
@@ -141,31 +141,19 @@ RegisterAdminNUICallback(
 
 RegisterAdminNUICallback(
     'Duty',
-    function()
-        if onduty[GetPlayerServerId(PlayerId())] then
-            onduty[GetPlayerServerId(PlayerId())] = false
+    function(_, cb)
+        ESX.TriggerServerCallback('changePlayerDutyState', function(newState, timeOnDuty)
             SendNUIMessage(
                 {
                     action = 'alert',
-                    msg = 'Kiléptél az Admin szolgálatból',
+                    msg = newState and 'Beléptél az Admin szolgálatba' or 'Kiléptél az Admin szolgálatból\nSzolgálatban töltött idő: ' .. timeOnDuty,
                     title = 'Adminszolgálat',
-                    color = 'danger'
+                    color = newState and 'success' or 'danger'
                 }
             )
-            TriggerServerEvent("adam_adminpanel:SendToDiscord", 1752220, "Adminduty", GetPlayerName(PlayerId()).." kilépett a szolgálatból", AAP.DiscordWebhook)
-        else
-            onduty[GetPlayerServerId(PlayerId())] = true
-            SendNUIMessage(
-                {
-                    action = 'alert',
-                    msg = 'Beléptél az Admin szolgálatba',
-                    title = 'Adminszolgálat',
-                    color = 'success'
-                }
-            )
-            TriggerServerEvent("adam_adminpanel:SendToDiscord", 1752220, "Adminduty", GetPlayerName(PlayerId()).." belépett a szolgálatba", AAP.DiscordWebhook)
-        end
-        TriggerServerEvent("setAdminsOnDuty", onduty)
+
+            cb({newState = newState})
+        end)
     end
 )
 
@@ -180,3 +168,12 @@ RegisterAdminNUICallback(
     end
 )
 
+-- Exports
+function isPlayerInAdminduty(player)
+    if (not player) then
+        return LocalPlayer.state.adminDuty
+    end
+
+    return Player(player).state.adminDuty
+end
+exports('isPlayerInAdminduty', isPlayerInAdminduty)
