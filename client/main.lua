@@ -179,3 +179,12 @@ function isPlayerInAdminduty(player)
     return Player(player).state.adminDuty
 end
 exports('isPlayerInAdminduty', isPlayerInAdminduty)
+
+function getPlayerAdminLabel(player)
+    if (not player) then
+        return LocalPlayer.state.adminLabel or "Admin"
+    end
+
+    return Player(player).state.adminLabel or "Admin"
+end
+exports('getPlayerAdminLabel', getPlayerAdminLabel)
