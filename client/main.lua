@@ -9,8 +9,8 @@ local onduty = {}
 function checkAdmin()
     local p = promise.new()
 
-    ESX.TriggerServerCallback('PlayerGroup', function(group)
-        p:resolve(AAP.AdminGroups[group])
+    ESX.TriggerServerCallback('adminpanel:PlayerGroup', function(isAdmin)
+        p:resolve(isAdmin)
     end)
 
     return Citizen.Await(p)

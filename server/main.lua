@@ -1,9 +1,9 @@
 local dutyStarts = {}
 
 -- Callback
-ESX.RegisterServerCallback("PlayerGroup", function(source, cb)
+ESX.RegisterServerCallback("adminpanel:PlayerGroup", function(source, cb)
 	local xSource = ESX.GetPlayerFromId(source)
-	cb(xSource.getGroup())
+	cb(AAP.AdminGroups[xSource.getGroup()])
 end)	
 
 ESX.RegisterServerCallback('changePlayerDutyState', function(source, cb)
