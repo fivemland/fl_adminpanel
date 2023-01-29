@@ -1,8 +1,10 @@
 AAP = {}
 
+AAP.AdminLabels = true
+
 AAP.AdminGroups = {
-    ['admin'] = true,
-    ['superadmin'] = true
+    ['admin'] = 'Admin',
+    ['superadmin'] = 'Szuper Admin'
 }
 
 AAP.AdminCommands = {

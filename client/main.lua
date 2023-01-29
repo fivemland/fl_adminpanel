@@ -1,10 +1,8 @@
-local nuiFocus = false
 local showedUI = false
 local speedrun = false
 local god = false
 local superjump = false
 local invisible = false
-local onduty = {}
 
 function checkAdmin()
     local p = promise.new()
@@ -46,19 +44,19 @@ RegisterKeyMapping('adminpanel', 'Admin Panel', 'keyboard', 'INSERT')
 
 -- Functions
 function showUI(group)
-        SendNUIMessage(
-            {
-                AdminCommands = AAP.AdminCommands,
-                playerCount = #GetActivePlayers(),
-                group = group,
-                action = 'showUI',
-                inDuty = isPlayerInAdminduty()
-            }
-        )
+    SendNUIMessage(
+        {
+            AdminCommands = AAP.AdminCommands,
+            playerCount = #GetActivePlayers(),
+            group = group,
+            action = 'showUI',
+            inDuty = isPlayerInAdminduty()
+        }
+    )
     SetNuiFocus(true, true)
 end
 
-function hideUI()
+function hideUI(_, cb)
     SendNUIMessage(
         {
             action = 'hideUI'
@@ -66,6 +64,10 @@ function hideUI()
     )
     SetNuiFocus(false, false)
     showedUI = false
+
+    if cb then
+        cb('ok')
+    end
 end
 
 -- NUI Callback

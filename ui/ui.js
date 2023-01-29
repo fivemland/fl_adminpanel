@@ -77,9 +77,6 @@ function logKey(e) {
 }
 
 async function Duty() {
-  const dbutton = document.getElementById('dbutton');
-  const dtext = document.getElementById('dtext');
-
   const response = await fetch(`https://${GetParentResourceName()}/Duty`);
   const { newState } = await response.json();
 
@@ -87,6 +84,9 @@ async function Duty() {
 }
 
 function updateDutyButton(state) {
+  const dbutton = document.getElementById('dbutton');
+  const dtext = document.getElementById('dtext');
+
   dbutton.classList.remove('btn-success');
   dbutton.classList.remove('btn-danger');
 

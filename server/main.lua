@@ -8,10 +8,12 @@ end)
 
 ESX.RegisterServerCallback('changePlayerDutyState', function(source, cb)
 	local playerName <const> = GetPlayerName(source)
+	local xPlayer = ESX.GetPlayerFromId(source)
+	
 	local sb = Player(source).state
-
 	local newState <const> = not sb.adminDuty
 	sb.adminDuty = newState
+	sb.adminLabel = AAP.AdminLabels and AAP.AdminGroups[xPlayer.getGroup()] or nil
 
 	local timeOnDuty = 0
 	if (newState) then 
